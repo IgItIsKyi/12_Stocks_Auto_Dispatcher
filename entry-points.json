@@ -1,0 +1,38 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "entryPoints": [
+    {
+      "filePath": "Main.xaml",
+      "uniqueId": "2a0c3fb4-1415-4925-909a-b857657434d7",
+      "type": "process",
+      "input": {
+        "type": "object",
+        "properties": {
+          "DBConnection": {
+            "type": "object",
+            "properties": {
+              "State": {
+                "enum": [
+                  "Closed",
+                  "Open",
+                  "Connecting",
+                  "Executing",
+                  "Fetching",
+                  "Broken"
+                ],
+                "readOnly": true
+              }
+            }
+          },
+          "PurchaseDate": {
+            "type": "string"
+          },
+          "CurrentStock": {
+            "type": "string"
+          }
+        },
+        "required": []
+      }
+    }
+  ]
+}
