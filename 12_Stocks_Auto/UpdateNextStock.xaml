@@ -1,7 +1,6 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="GetNextPurchaseDate" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="GetNextPurchaseDate" this:GetNextPurchaseDate.in_StockID="2" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:this="clr-namespace:" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="out_StockID" Type="OutArgument(x:Int32)" />
-    <x:Property Name="out_CurrentStock" Type="OutArgument(x:String)" />
+    <x:Property Name="in_StockID" Type="InArgument(x:Int32)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
@@ -99,10 +98,10 @@
       <AssemblyReference>System.Runtime.Numerics</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="GetNextPurchaseDate" sap:VirtualizedContainerService.HintSize="1330,1706.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="GetNextPurchaseDate" sap:VirtualizedContainerService.HintSize="1330,2629.6" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:String" Name="variable1" />
-      <Variable x:TypeArguments="sd:DataTable" Name="currentStockDT" />
+      <Variable x:TypeArguments="x:String" Name="nextStockSymbol" />
+      <Variable x:TypeArguments="sd:DataTable" Name="nextStockDT" />
       <Variable x:TypeArguments="ui:DatabaseConnection" Name="DBConnection" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
@@ -110,24 +109,60 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Starting GetNextStock Process...&quot;]" />
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;Starting UpdateNextStock Process...&quot;]" />
     <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="ConnectToDatabase - Invoke Workflow File (12_Stocks_Auto\ConnectToDatabase.xaml)" sap:VirtualizedContainerService.HintSize="451.2,180.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="12_Stocks_Auto\ConnectToDatabase.xaml">
       <ui:InvokeWorkflowFile.Arguments>
         <OutArgument x:TypeArguments="ui:DatabaseConnection" x:Key="out_DBConnection">[DBConnection]</OutArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <ui:ExecuteQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DataTable="[currentStockDT]" DisplayName="Run Query" ExistingDbConnection="[DBConnection]" sap:VirtualizedContainerService.HintSize="451.2,151.2" sap2010:WorkflowViewState.IdRef="ExecuteQuery_1" Sql="SELECT stocks.id, [user].cur_stock FROM stocks INNER JOIN [user] ON [user].cur_stock=stocks.stock_sym">
+    <If Condition="[in_StockID = 12]" sap:VirtualizedContainerService.HintSize="451.2,605.6" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,233.6" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <Assign sap:VirtualizedContainerService.HintSize="416,169.6" sap2010:WorkflowViewState.IdRef="Assign_3">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">[in_StockID]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="449.6,233.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <Assign sap:VirtualizedContainerService.HintSize="416,169.6" sap2010:WorkflowViewState.IdRef="Assign_4">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">[in_StockID]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">[in_StockID + 1]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
+      </If.Else>
+    </If>
+    <ui:ExecuteQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DataTable="[nextStockDT]" DisplayName="Run Query - Grab Next Stock" ExistingDbConnection="[DBConnection]" sap:VirtualizedContainerService.HintSize="451.2,151.2" sap2010:WorkflowViewState.IdRef="ExecuteQuery_1" Sql="[&quot;SELECT stock_sym FROM stocks WHERE id =&quot; + in_StockID.ToString]">
       <ui:ExecuteQuery.Parameters>
         <scg:Dictionary x:TypeArguments="x:String, Argument" />
       </ui:ExecuteQuery.Parameters>
     </ui:ExecuteQuery>
-    <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[currentStockDT]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="451.2,1011.2" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+    <ui:ForEachRow ColumnNames="{x:Null}" CurrentIndex="{x:Null}" DataTable="[nextStockDT]" DisplayName="For Each Row in Data Table" sap:VirtualizedContainerService.HintSize="451.2,772" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
       <ui:ForEachRow.Body>
         <ActivityAction x:TypeArguments="sd:DataRow">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="sd:DataRow" Name="CurrentRow" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="449.6,829.6" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="449.6,590.4" sap2010:WorkflowViewState.IdRef="Sequence_2">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -135,27 +170,26 @@
             </sap:WorkflowViewStateService.ViewState>
             <Assign sap:VirtualizedContainerService.HintSize="416,178.4" sap2010:WorkflowViewState.IdRef="Assign_1">
               <Assign.To>
-                <OutArgument x:TypeArguments="x:String">[out_CurrentStock]</OutArgument>
+                <OutArgument x:TypeArguments="x:String">[nextStockSymbol]</OutArgument>
               </Assign.To>
               <Assign.Value>
-                <InArgument x:TypeArguments="x:String">[CurrentRow.Item("cur_stock").ToString]</InArgument>
+                <InArgument x:TypeArguments="x:String">[CurrentRow.Item("stock_sym").ToString]</InArgument>
               </Assign.Value>
             </Assign>
-            <Assign sap:VirtualizedContainerService.HintSize="416,178.4" sap2010:WorkflowViewState.IdRef="Assign_2">
-              <Assign.To>
-                <OutArgument x:TypeArguments="x:Int32">[out_stockID]</OutArgument>
-              </Assign.To>
-              <Assign.Value>
-                <InArgument x:TypeArguments="x:Int32">[CInt(CurrentRow.Item("id"))]</InArgument>
-              </Assign.Value>
-            </Assign>
-            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,178.4" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;Next purchase Date: &quot; + out_CurrentStock]" />
-            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,178.4" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="[&quot;Stock ID: &quot; + out_stockID.ToString]" />
-            <ui:DatabaseDisconnect DatabaseConnection="[DBConnection]" DisplayName="Disconnect from Database" sap:VirtualizedContainerService.HintSize="416,52" sap2010:WorkflowViewState.IdRef="DatabaseDisconnect_2" />
+            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,178.4" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;Next Stock: &quot; + nextStockSymbol]" />
+            <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="416,169.6" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="[&quot;Stock ID: &quot; + in_StockID.ToString]" />
           </Sequence>
         </ActivityAction>
       </ui:ForEachRow.Body>
     </ui:ForEachRow>
-    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,165.6" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Ending GetNextStock Process...&quot;]" />
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Info" Message="[&quot;Updating current stock to &quot; + nextStockSymbol + &quot; in user table&quot;]" />
+    <ui:ExecuteQuery ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" DataTable="[nextStockDT]" DisplayName="Run Query - Update user cur_stock" ExistingDbConnection="[DBConnection]" sap:VirtualizedContainerService.HintSize="451.2,151.2" sap2010:WorkflowViewState.IdRef="ExecuteQuery_2" Sql="[&quot;UPDATE [user] SET cur_stock= '&quot;+ nextStockSymbol + &quot;' Where id = 1&quot;]">
+      <ui:ExecuteQuery.Parameters>
+        <scg:Dictionary x:TypeArguments="x:String, Argument" />
+      </ui:ExecuteQuery.Parameters>
+    </ui:ExecuteQuery>
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[&quot;Updated table successfully.&quot;]" />
+    <ui:DatabaseDisconnect DatabaseConnection="[DBConnection]" DisplayName="Disconnect from Database" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="DatabaseDisconnect_2" />
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,165.6" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Ending UpdateNextStock Process...&quot;]" />
   </Sequence>
 </Activity>

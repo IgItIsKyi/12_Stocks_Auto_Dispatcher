@@ -3,6 +3,7 @@
     <x:Property Name="DBConnection" Type="InArgument(ui:DatabaseConnection)" />
     <x:Property Name="PurchaseDate" Type="InArgument(x:String)" />
     <x:Property Name="CurrentStock" Type="InArgument(x:String)" />
+    <x:Property Name="CurrentStockID" Type="InArgument(x:Int32)" />
   </x:Members>
   <this:Main.DBConnection>
     <InArgument x:TypeArguments="ui:DatabaseConnection" />
@@ -13,6 +14,9 @@
   <this:Main.CurrentStock>
     <InArgument x:TypeArguments="x:String" />
   </this:Main.CurrentStock>
+  <this:Main.CurrentStockID>
+    <InArgument x:TypeArguments="x:Int32" />
+  </this:Main.CurrentStockID>
   <VisualBasic.Settings>
     <x:Null />
   </VisualBasic.Settings>
@@ -47,6 +51,7 @@
       <x:String>System.Runtime.Serialization</x:String>
       <x:String>System.Reflection</x:String>
       <x:String>UiPath.Database</x:String>
+      <x:String>System.Numerics</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -96,9 +101,10 @@
       <AssemblyReference>System.Collections</AssemblyReference>
       <AssemblyReference>System.Linq.Async</AssemblyReference>
       <AssemblyReference>System.Collections.NonGeneric</AssemblyReference>
+      <AssemblyReference>System.Runtime.Numerics</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1330,1419.2" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1330,1600" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -111,17 +117,23 @@
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
     <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,174.4" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;Today's Date: &quot; + DateTime.Now.ToString(&quot;MM-dd-yyyy&quot;)]" />
-    <If Condition="[PurchaseDate = DateTime.Now.ToString(&quot;MM-dd-yyyy&quot;)]" sap:VirtualizedContainerService.HintSize="451.2,464" sap2010:WorkflowViewState.IdRef="If_1">
+    <If Condition="[PurchaseDate = DateTime.Now.ToString(&quot;MM-dd-yyyy&quot;)]" sap:VirtualizedContainerService.HintSize="451.2,644.8" sap2010:WorkflowViewState.IdRef="If_1">
       <If.Then>
-        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,236" sap2010:WorkflowViewState.IdRef="Sequence_2">
+        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="449.6,416.8" sap2010:WorkflowViewState.IdRef="Sequence_2">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="GetNextStock - Invoke Workflow File (12_Stocks_Auto\GetNextStock.xaml)" sap:VirtualizedContainerService.HintSize="416,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="12_Stocks_Auto\GetNextStock.xaml">
+          <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="GetNextStock - Invoke Workflow File (12_Stocks_Auto\GetNextStock.xaml)" sap:VirtualizedContainerService.HintSize="416,180.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="12_Stocks_Auto\GetNextStock.xaml">
             <ui:InvokeWorkflowFile.Arguments>
               <OutArgument x:TypeArguments="x:String" x:Key="out_CurrentStock">[CurrentStock]</OutArgument>
+              <OutArgument x:TypeArguments="x:Int32" x:Key="out_StockID">[CurrentStockID]</OutArgument>
+            </ui:InvokeWorkflowFile.Arguments>
+          </ui:InvokeWorkflowFile>
+          <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="UpdateNextStock - Invoke Workflow File (12_Stocks_Auto\UpdateNextStock.xaml)" sap:VirtualizedContainerService.HintSize="416,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="12_Stocks_Auto\UpdateNextStock.xaml">
+            <ui:InvokeWorkflowFile.Arguments>
+              <InArgument x:TypeArguments="x:Int32" x:Key="in_StockID">[CurrentStockID]</InArgument>
             </ui:InvokeWorkflowFile.Arguments>
           </ui:InvokeWorkflowFile>
         </Sequence>
@@ -136,9 +148,9 @@
         </Sequence>
       </If.Else>
     </If>
-    <ui:AddQueueItem TimeoutMS="{x:Null}" DisplayName="Add Queue Item" FolderPath="Live/12_Stocks_Auto" sap:VirtualizedContainerService.HintSize="451.2,236.8" sap2010:WorkflowViewState.IdRef="AddQueueItem_1" Priority="Normal" QueueType="12_Stocks_Auto">
+    <ui:AddQueueItem TimeoutMS="{x:Null}" DisplayName="Add Queue Item" FolderPath="Live/12_Stocks_Auto" sap:VirtualizedContainerService.HintSize="451.2,236.8" sap2010:WorkflowViewState.IdRef="AddQueueItem_1" Priority="Normal" QueueType="12_Stocks_Auto" Reference="[&quot;R_&quot; + CurrentStock + DateTime.Now.ToString(&quot;MM-dd-yyyy&quot;)]">
       <ui:AddQueueItem.ItemInformation>
-        <scg:Dictionary x:TypeArguments="x:String, InArgument" />
+        <InArgument x:TypeArguments="x:String" x:Key="Stock">[CurrentStock]</InArgument>
       </ui:AddQueueItem.ItemInformation>
     </ui:AddQueueItem>
     <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="451.2,165.6" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;Ending 12_Stocks_Auto_Dispatcher process...&quot;]" />
